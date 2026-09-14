@@ -10,7 +10,6 @@
     questionPage: false,
     profilePage: false,
     shortComment: false,
-    shortCommentLength: 80,
     upvoteThreshold: 100,
     commentThreshold: 0,
     favoriteThreshold: 0,
@@ -177,13 +176,11 @@
 
     if (checkMatch(stats)) {
       if (settings.shortComment) {
-        checkIsShortComment(item).then(isShort => {
-          if (isShort) {
-            applyMatch(container);
-          } else if (settings.hide) {
-            container.classList.add(NO_MATCH_CLASS);
-          }
-        });
+        if (checkIsShortComment(item)) {
+          applyMatch(container);
+        } else if (settings.hide) {
+          container.classList.add(NO_MATCH_CLASS);
+        }
       } else {
         applyMatch(container);
       }
@@ -247,46 +244,10 @@
     return richText ? richText.innerText || '' : '';
   }
 
-  function getAnswerId(item) {
-    const dataZop = item.getAttribute('data-zop');
-    if (dataZop) {
-      try {
-        const data = JSON.parse(dataZop);
-        return data.itemId;
-      } catch (e) {}
-    }
-    return null;
-  }
-
-  async function checkIsShortComment(item) {
+  function checkIsShortComment(item) {
     const previewText = getPreviewText(item);
-    const threshold = settings.shortCommentLength || 80;
-    
-    if (previewText.length >= threshold) {
-      return false;
-    }
-    
-    const answerId = getAnswerId(item);
-    if (!answerId) {
-      return previewText.length < threshold;
-    }
-    
-    try {
-      const response = await fetch(`https://www.zhihu.com/api/v4/answers/${answerId}?include=content`, {
-        credentials: 'include'
-      });
-      if (!response.ok) return previewText.length < threshold;
-      
-      const data = await response.json();
-      const fullContent = data.content || '';
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = fullContent;
-      const fullText = tempDiv.innerText || '';
-      
-      return fullText.length < threshold;
-    } catch (e) {
-      return previewText.length < threshold;
-    }
+    const hasEllipsis = previewText.includes('…') || previewText.includes('...');
+    return !hasEllipsis;
   }
 
   function parseNumber(text) {

@@ -26,18 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const sliders = {
     breatheIntensity: $('breatheIntensity'),
-    breatheSpeed: $('breatheSpeed'),
-    shortCommentLength: $('shortCommentLength')
+    breatheSpeed: $('breatheSpeed')
   };
 
   const sliderValues = {
     breatheIntensity: $('breatheIntensityValue'),
-    breatheSpeed: $('breatheSpeedValue'),
-    shortCommentLength: $('shortCommentLengthValue')
+    breatheSpeed: $('breatheSpeedValue')
   };
 
   const breatheSliders = $('breatheSliders');
-  const shortCommentSliders = $('shortCommentSliders');
   const themeSwitch = $('themeSwitch');
   const themeIcon = $('themeIcon');
   const saveBtn = $('saveBtn');
@@ -143,10 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePreview();
   });
 
-  sliders.shortCommentLength.addEventListener('input', (e) => {
-    sliderValues.shortCommentLength.textContent = e.target.value + '字';
-  });
-
   // ============ 保存/应用 ============
 
   function getSettings() {
@@ -159,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
       questionPage: toggles.questionPage.classList.contains('active'),
       profilePage: toggles.profilePage.classList.contains('active'),
       shortComment: toggles.shortComment.classList.contains('active'),
-      shortCommentLength: parseInt(sliders.shortCommentLength.value) || 80,
       upvoteThreshold: parseInt(fields.upvoteThreshold.value) || 0,
       commentThreshold: parseInt(fields.commentThreshold.value) || 0,
       favoriteThreshold: parseInt(fields.favoriteThreshold.value) || 0,
@@ -224,11 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setToggle(toggles.profilePage, s.profilePage);
         setToggle(toggles.shortComment, s.shortComment);
 
-        sliders.shortCommentLength.value = s.shortCommentLength || 80;
-        sliderValues.shortCommentLength.textContent = (s.shortCommentLength || 80) + '字';
-
         breatheSliders.style.display = toggles.breathe.classList.contains('active') ? 'block' : 'none';
-        shortCommentSliders.style.display = toggles.shortComment.classList.contains('active') ? 'block' : 'none';
         updatePreview();
       }
     });
