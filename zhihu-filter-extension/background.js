@@ -6,6 +6,8 @@ const DEFAULT_SETTINGS = {
   keepAlive: false,
   questionPage: false,
   profilePage: false,
+  shortComment: false,
+  shortCommentLength: 80,
   upvoteThreshold: 100,
   commentThreshold: 0,
   favoriteThreshold: 0,

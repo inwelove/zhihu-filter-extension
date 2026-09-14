@@ -9,6 +9,8 @@
     keepAlive: false,
     questionPage: false,
     profilePage: false,
+    shortComment: false,
+    shortCommentLength: 80,
     upvoteThreshold: 100,
     commentThreshold: 0,
     favoriteThreshold: 0,
@@ -174,13 +176,27 @@
     container.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS);
 
     if (checkMatch(stats)) {
-      matchCount++;
-      container.classList.add(MATCH_CLASS);
-      if (settings.breathe) {
-        container.classList.add(BREATHE_CLASS);
+      if (settings.shortComment) {
+        checkIsShortComment(item).then(isShort => {
+          if (isShort) {
+            applyMatch(container);
+          } else if (settings.hide) {
+            container.classList.add(NO_MATCH_CLASS);
+          }
+        });
+      } else {
+        applyMatch(container);
       }
     } else if (settings.hide) {
       container.classList.add(NO_MATCH_CLASS);
+    }
+  }
+
+  function applyMatch(container) {
+    matchCount++;
+    container.classList.add(MATCH_CLASS);
+    if (settings.breathe) {
+      container.classList.add(BREATHE_CLASS);
     }
   }
 
@@ -224,6 +240,53 @@
     });
 
     return stats;
+  }
+
+  function getPreviewText(item) {
+    const richText = item.querySelector('.RichText');
+    return richText ? richText.innerText || '' : '';
+  }
+
+  function getAnswerId(item) {
+    const dataZop = item.getAttribute('data-zop');
+    if (dataZop) {
+      try {
+        const data = JSON.parse(dataZop);
+        return data.itemId;
+      } catch (e) {}
+    }
+    return null;
+  }
+
+  async function checkIsShortComment(item) {
+    const previewText = getPreviewText(item);
+    const threshold = settings.shortCommentLength || 80;
+    
+    if (previewText.length >= threshold) {
+      return false;
+    }
+    
+    const answerId = getAnswerId(item);
+    if (!answerId) {
+      return previewText.length < threshold;
+    }
+    
+    try {
+      const response = await fetch(`https://www.zhihu.com/api/v4/answers/${answerId}?include=content`, {
+        credentials: 'include'
+      });
+      if (!response.ok) return previewText.length < threshold;
+      
+      const data = await response.json();
+      const fullContent = data.content || '';
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = fullContent;
+      const fullText = tempDiv.innerText || '';
+      
+      return fullText.length < threshold;
+    } catch (e) {
+      return previewText.length < threshold;
+    }
   }
 
   function parseNumber(text) {
