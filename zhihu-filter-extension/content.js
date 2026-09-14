@@ -181,12 +181,15 @@
     const container = item.closest('.Card') || item.closest('.Feed') || item;
     container.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS, 'zhihu-has-both');
 
-    // 移除旧的短评标签
-    const oldBadge = container.querySelector('.zhihu-short-badge');
-    if (oldBadge) oldBadge.remove();
+    // 移除旧的短评标签（只在初始加载时）
+    if (isInitialLoad) {
+      const oldBadge = container.querySelector('.zhihu-short-badge');
+      if (oldBadge) oldBadge.remove();
+    }
 
     if (checkMatch(stats)) {
-      const isShort = checkIsShortComment(item);
+      // 只在初始加载时判断短评，自动加载时保持之前的状态
+      const isShort = isInitialLoad ? checkIsShortComment(item) : !!container.querySelector('.zhihu-short-badge');
       
       if (settings.shortComment) {
         // 只看短评模式：只显示短评
@@ -198,7 +201,9 @@
       } else if (isShort) {
         // 正常模式 + 短评：显示高亮 + 短评标签
         applyMatch(container);
-        addShortBadge(container);
+        if (isInitialLoad) {
+          addShortBadge(container);
+        }
         container.classList.add('zhihu-has-both');
       } else {
         // 正常模式 + 非短评：只显示高亮
