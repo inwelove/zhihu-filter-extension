@@ -29,6 +29,7 @@
   let debounceTimer = null;
   let observer = null;
   let matchCount = 0;
+  let isInitialLoad = true;
 
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action === 'applyFilter') {
@@ -155,6 +156,10 @@
 
     matchCount = 0;
     document.querySelectorAll('.AnswerItem, .ContentItem').forEach(processItem);
+    
+    if (isInitialLoad) {
+      isInitialLoad = false;
+    }
   }
 
   function clearAllFilters() {
@@ -164,8 +169,8 @@
   }
 
   function processItem(item) {
-    // 检查是否达到最大匹配数量
-    if (settings.maxMatchCount > 0 && matchCount >= settings.maxMatchCount) {
+    // 只在自动加载时检查最大匹配数量（初始加载时不限制）
+    if (!isInitialLoad && settings.maxMatchCount > 0 && matchCount >= settings.maxMatchCount) {
       return;
     }
 

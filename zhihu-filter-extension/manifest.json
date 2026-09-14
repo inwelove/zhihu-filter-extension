@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "知乎高赞筛选",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "筛选知乎回答，高亮或隐藏点赞数低于/高于指定阈值的内容",
   "permissions": [
     "storage",
