@@ -24,6 +24,7 @@
   const MATCH_CLASS = 'zhihu-filter-match';
   const NO_MATCH_CLASS = 'zhihu-filter-no-match';
   const BREATHE_CLASS = 'zhihu-filter-breathe';
+  const SHORT_BADGE_CLASS = 'zhihu-filter-short-badge';
 
   let debounceTimer = null;
   let observer = null;
@@ -157,8 +158,9 @@
   }
 
   function clearAllFilters() {
-    document.querySelectorAll(`.${MATCH_CLASS}, .${NO_MATCH_CLASS}, .${BREATHE_CLASS}`)
-      .forEach(el => el.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS));
+    document.querySelectorAll(`.${MATCH_CLASS}, .${NO_MATCH_CLASS}, .${BREATHE_CLASS}, .${SHORT_BADGE_CLASS}`)
+      .forEach(el => el.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS));
+    document.querySelectorAll('.zhihu-short-badge').forEach(el => el.remove());
   }
 
   function processItem(item) {
@@ -167,21 +169,33 @@
       return;
     }
 
-    item.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS);
+    item.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS);
     const stats = extractStats(item);
     item.setAttribute('data-filter-stats', JSON.stringify(stats));
 
     const container = item.closest('.Card') || item.closest('.Feed') || item;
-    container.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS);
+    container.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS);
+
+    // 移除旧的短评标签
+    const oldBadge = container.querySelector('.zhihu-short-badge');
+    if (oldBadge) oldBadge.remove();
 
     if (checkMatch(stats)) {
+      const isShort = checkIsShortComment(item);
+      
       if (settings.shortComment) {
-        if (checkIsShortComment(item)) {
+        // 只看短评模式：只显示短评
+        if (isShort) {
           applyMatch(container);
-        } else if (settings.hide) {
+        } else {
           container.classList.add(NO_MATCH_CLASS);
         }
+      } else if (isShort) {
+        // 正常模式 + 短评：显示高亮 + 短评标签
+        applyMatch(container);
+        addShortBadge(container);
       } else {
+        // 正常模式 + 非短评：只显示高亮
         applyMatch(container);
       }
     } else if (settings.hide) {
@@ -195,6 +209,14 @@
     if (settings.breathe) {
       container.classList.add(BREATHE_CLASS);
     }
+  }
+
+  function addShortBadge(container) {
+    const badge = document.createElement('div');
+    badge.className = 'zhihu-short-badge';
+    badge.textContent = '短评';
+    container.style.position = 'relative';
+    container.appendChild(badge);
   }
 
   function checkMatch(stats) {
