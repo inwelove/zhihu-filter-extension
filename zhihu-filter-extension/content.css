@@ -79,18 +79,12 @@
   right: 80px;
 }
 
-.Card:hover .zhihu-filter-match::after,
+.zhihu-filter-match:hover::after,
+.zhihu-has-both:hover .zhihu-short-badge,
 .Card:hover .zhihu-short-badge,
-.Feed:hover .zhihu-filter-match::after,
 .Feed:hover .zhihu-short-badge,
-.TopstoryItem:hover .zhihu-filter-match::after,
-.TopstoryItem:hover .zhihu-short-badge {
-  opacity: 0;
-}
-
-.AnswerItem:hover .zhihu-filter-match::after,
+.TopstoryItem:hover .zhihu-short-badge,
 .AnswerItem:hover .zhihu-short-badge,
-.ContentItem:hover .zhihu-filter-match::after,
 .ContentItem:hover .zhihu-short-badge {
   opacity: 0;
 }
