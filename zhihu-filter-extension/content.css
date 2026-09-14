@@ -58,7 +58,7 @@
 .zhihu-short-badge {
   position: absolute;
   top: 10px;
-  right: 80px;
+  right: 10px;
   background: #10a37f;
   color: #fff;
   padding: 3px 10px;
@@ -69,16 +69,12 @@
   pointer-events: none;
 }
 
-.Card:has(.zhihu-short-badge) .zhihu-filter-match::after {
+.zhihu-has-both .zhihu-filter-match::after {
   right: 10px;
 }
 
-.Card:has(.zhihu-filter-match::after) .zhihu-short-badge {
+.zhihu-has-both .zhihu-short-badge {
   right: 80px;
-}
-
-.Card:not(:has(.zhihu-filter-match)) .zhihu-short-badge {
-  right: 10px;
 }
 
 .zhihu-filter-breathe {

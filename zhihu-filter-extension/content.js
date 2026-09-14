@@ -163,8 +163,8 @@
   }
 
   function clearAllFilters() {
-    document.querySelectorAll(`.${MATCH_CLASS}, .${NO_MATCH_CLASS}, .${BREATHE_CLASS}, .${SHORT_BADGE_CLASS}`)
-      .forEach(el => el.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS));
+    document.querySelectorAll(`.${MATCH_CLASS}, .${NO_MATCH_CLASS}, .${BREATHE_CLASS}, .${SHORT_BADGE_CLASS}, .zhihu-has-both`)
+      .forEach(el => el.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS, 'zhihu-has-both'));
     document.querySelectorAll('.zhihu-short-badge').forEach(el => el.remove());
   }
 
@@ -179,7 +179,7 @@
     item.setAttribute('data-filter-stats', JSON.stringify(stats));
 
     const container = item.closest('.Card') || item.closest('.Feed') || item;
-    container.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS);
+    container.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS, 'zhihu-has-both');
 
     // 移除旧的短评标签
     const oldBadge = container.querySelector('.zhihu-short-badge');
@@ -199,6 +199,7 @@
         // 正常模式 + 短评：显示高亮 + 短评标签
         applyMatch(container);
         addShortBadge(container);
+        container.classList.add('zhihu-has-both');
       } else {
         // 正常模式 + 非短评：只显示高亮
         applyMatch(container);
