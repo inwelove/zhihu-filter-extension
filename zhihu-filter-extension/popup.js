@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
       commentThreshold: parseInt(fields.commentThreshold.value) || 0,
       favoriteThreshold: parseInt(fields.favoriteThreshold.value) || 0,
       likeThreshold: parseInt(fields.likeThreshold.value) || 0,
-      maxMatchCount: parseInt(fields.maxMatchCount.value) || 50,
+      maxMatchCount: fields.maxMatchCount.value === '' ? 50 : parseInt(fields.maxMatchCount.value),
       highlightColor: fields.highlightColor.value,
       glowColor: fields.glowColor.value,
       breatheIntensity: parseInt(sliders.breatheIntensity.value) || 50,
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fields.commentThreshold.value = s.commentThreshold || 0;
         fields.favoriteThreshold.value = s.favoriteThreshold || 0;
         fields.likeThreshold.value = s.likeThreshold || 0;
-        fields.maxMatchCount.value = s.maxMatchCount || 50;
+        fields.maxMatchCount.value = s.maxMatchCount !== undefined ? s.maxMatchCount : 50;
         fields.highlightColor.value = s.highlightColor || '#0084ff';
         fields.glowColor.value = s.glowColor || '#0066cc';
         fields.highlightColorText.value = s.highlightColor || '#0084ff';
