@@ -280,6 +280,12 @@
   }
 
   function checkIsShortComment(item) {
+    // 如果没有"阅读全文"按钮，说明内容已完全展开，不是短评
+    const moreBtn = item.querySelector('.ContentItem-more');
+    if (!moreBtn) {
+      return false;
+    }
+    
     const previewText = getPreviewText(item);
     const hasEllipsis = previewText.includes('…') || previewText.includes('...');
     return !hasEllipsis;
