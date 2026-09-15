@@ -35,7 +35,7 @@
     if (msg.action === 'applyFilter') {
       settings = msg.settings;
       applyStyles();
-      processAllAnswers();
+      processAllAnswers(true); // 手动触发，不限制
       // 处理 keep-alive 状态
       if (settings.keepAlive && !window.__ZHIHU_KEEP_ALIVE_INJECTED__) {
         injectKeepAlive();
@@ -148,14 +148,16 @@
     return false;
   }
 
-  function processAllAnswers() {
+  function processAllAnswers(skipLimit = false) {
     if (!settings.enabled || !isZhihuPage()) {
       clearAllFilters();
       return;
     }
 
     matchCount = 0;
-    document.querySelectorAll('.AnswerItem, .ContentItem').forEach(processItem);
+    document.querySelectorAll('.AnswerItem, .ContentItem').forEach(item => {
+      processItem(item, skipLimit);
+    });
     
     if (isInitialLoad) {
       isInitialLoad = false;
@@ -168,9 +170,9 @@
     document.querySelectorAll('.zhihu-short-badge').forEach(el => el.remove());
   }
 
-  function processItem(item) {
-    // 只在自动加载时检查最大匹配数量（初始加载时不限制）
-    if (!isInitialLoad && settings.maxMatchCount > 0 && matchCount >= settings.maxMatchCount) {
+  function processItem(item, skipLimit = false) {
+    // 只在自动加载时检查最大匹配数量（初始加载和手动触发时不限制）
+    if (!skipLimit && !isInitialLoad && settings.maxMatchCount > 0 && matchCount >= settings.maxMatchCount) {
       return;
     }
 
