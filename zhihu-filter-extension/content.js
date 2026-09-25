@@ -248,7 +248,7 @@
     const upvoteBtn = item.querySelector('.VoteButton');
     if (upvoteBtn) {
       const ariaLabel = upvoteBtn.getAttribute('aria-label') || '';
-      const ariaMatch = ariaLabel.match(/赞同\s*([\d,.]+)/);
+      const ariaMatch = ariaLabel.match(/赞同\s*([\d,.]+[万亿kKmM]?)/);
       if (ariaMatch) stats.upvotes = parseNumber(ariaMatch[1]);
     }
 
@@ -258,15 +258,15 @@
       const ariaLabel = btn.getAttribute('aria-label') || '';
       
       if (text.includes('评论') || ariaLabel.includes('评论')) {
-        const match = text.match(/([\d,.]+)/);
+        const match = text.match(/([\d,.]+[万亿kKmM]?)/);
         if (match) stats.comments = parseNumber(match[1]);
       }
       if (text.includes('收藏') || ariaLabel.includes('收藏')) {
-        const match = text.match(/([\d,.]+)/);
+        const match = text.match(/([\d,.]+[万亿kKmM]?)/);
         if (match) stats.favorites = parseNumber(match[1]);
       }
       if (text.includes('喜欢') || ariaLabel.includes('喜欢')) {
-        const match = text.match(/([\d,.]+)/);
+        const match = text.match(/([\d,.]+[万亿kKmM]?)/);
         if (match) stats.likes = parseNumber(match[1]);
       }
     });
