@@ -121,9 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (t === toggles.breathe) {
         breatheSliders.style.display = toggles.breathe.classList.contains('active') ? 'block' : 'none';
       }
-      if (t === toggles.shortComment) {
-        shortCommentSliders.style.display = toggles.shortComment.classList.contains('active') ? 'block' : 'none';
-      }
       updatePreview();
     });
   });
