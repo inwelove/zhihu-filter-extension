@@ -183,15 +183,13 @@
     const container = item.closest('.Card') || item.closest('.Feed') || item;
     container.classList.remove(MATCH_CLASS, NO_MATCH_CLASS, BREATHE_CLASS, SHORT_BADGE_CLASS, 'zhihu-has-both');
 
-    // 移除旧的短评标签（只在初始加载时）
-    if (isInitialLoad) {
-      const oldBadge = container.querySelector('.zhihu-short-badge');
-      if (oldBadge) oldBadge.remove();
-    }
+    // 移除旧的短评标签
+    const oldBadge = container.querySelector('.zhihu-short-badge');
+    if (oldBadge) oldBadge.remove();
 
     if (checkMatch(stats)) {
-      // 只在初始加载时判断短评，自动加载时保持之前的状态
-      const isShort = isInitialLoad ? checkIsShortComment(item) : !!container.querySelector('.zhihu-short-badge');
+      // 判断是否短评
+      const isShort = checkIsShortComment(item);
       
       if (settings.shortComment) {
         // 只看短评模式：只显示短评
