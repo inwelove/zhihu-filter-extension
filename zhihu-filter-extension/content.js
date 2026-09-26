@@ -201,9 +201,7 @@
       } else if (isShort) {
         // 正常模式 + 短评：显示高亮 + 短评标签
         applyMatch(container);
-        if (isInitialLoad) {
-          addShortBadge(container);
-        }
+        addShortBadge(container);
         container.classList.add('zhihu-has-both');
       } else {
         // 正常模式 + 非短评：只显示高亮
